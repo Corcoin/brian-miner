@@ -16,7 +16,7 @@ address = '1Jt883Y1XSfTkZdfje6vYvVYpXDJmwVBNQ'
 nonce   = hex(random.randint(0,2**32-1))[2:].zfill(8)
 
 host    = 'solo.ckpool.org'
-port    = 3333 
+port    = 443 
 #host    = 'pool.mainnet.bitcoin-global.io'
 #port    = 9223
 
