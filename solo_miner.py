@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-@author: iceland
+@author: brian
 """
 
 import socket
