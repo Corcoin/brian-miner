@@ -12,11 +12,11 @@ from pprint import pprint
 import time
 import random
 
-address = '1Q1Ten9ASaVMswFmvu64spJi96SojHCNWv'
+address = '1Jt883Y1XSfTkZdfje6vYvVYpXDJmwVBNQ'
 nonce   = hex(random.randint(0,2**32-1))[2:].zfill(8)
 
 host    = 'solo.ckpool.org'
-port    = 3333
+port    = 3333 
 #host    = 'pool.mainnet.bitcoin-global.io'
 #port    = 9223
 
@@ -51,7 +51,7 @@ job_id,prevhash,coinb1,coinb2,merkle_branch,version,nbits,ntime,clean_jobs \
 target = (nbits[2:]+'00'*(int(nbits[:2],16) - 3)).zfill(64)
 print('nbits:{} target:{}\n'.format(nbits,target))
 
-# extranonce2 = '00'*extranonce2_size
+extranonce2 = '00'*extranonce2_size
 extranonce2 = hex(random.randint(0,2**32-1))[2:].zfill(2*extranonce2_size)      # create random
 
 coinbase = coinb1 + extranonce1 + extranonce2 + coinb2
@@ -73,25 +73,26 @@ def noncework():
     nonce   = hex(random.randint(0,2**32-1))[2:].zfill(8)   #hex(int(nonce,16)+1)[2:]
     blockheader = version + prevhash + merkle_root + nbits + ntime + nonce +\
         '000000800000000000000000000000000000000000000000000000000000000000000000000000000000000080020000'
-    
-#    print('blockheader:\n{}\n'.format(blockheader))
-    
+
+    print('blockheader:\n{}\n'.format(blockheader))
+
     hash = hashlib.sha256(hashlib.sha256(binascii.unhexlify(blockheader)).digest()).digest()
     hash = binascii.hexlify(hash).decode()
-#    print('hash: {}'.format(hash))
-    if(hash[:5] == '00000'): print('hash: {}'.format(hash))
+    print('hash: {}'.format(hash))
+    #if(hash[:5] == '00000'): print('hash: {}'.format(hash))
     if hash < target :
-#    if(hash[:10] == '0000000000'):
-        print('success!!')
-        print('hash: {}'.format(hash))
-        payload = bytes('{"params": ["'+address+'", "'+job_id+'", "'+extranonce2 \
+        if(hash[:20] == '00000000000000000000'):
+            print('success!!rewarded 6.25 Bitcoin')
+            print('hash: {}'.format(hash))
+            payload = bytes('{"params": ["'+address+'", "'+job_id+'", "'+extranonce2 \
             +'", "'+ntime+'", "'+nonce+'"], "id": 1, "method": "mining.submit"}\n', 'utf-8')
-        sock.sendall(payload)
-        print(sock.recv(1024))
-#    else:
-#        print('failed mine, hash is greater than target')
+            sock.sendall(payload)
+            print(sock.recv(1024))
+        else:
+            print('failed mine, hash is greater than target')
 
-for k in range(10000000):
+for k in range(1000000000000000):
     noncework()
 print("Finished 10M Search. You can re-attempt to try your luck for solo reward !!")
 sock.close()
+
